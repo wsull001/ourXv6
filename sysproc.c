@@ -27,7 +27,9 @@ sys_exit(void)
 int
 sys_wait(void)
 {
-  return wait();
+  int* stat;
+  if(argptr(0, (char**) &stat, 1) < 0) return -1;
+  return wait(stat);
 }
 
 int
