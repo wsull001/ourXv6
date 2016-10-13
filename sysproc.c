@@ -33,6 +33,12 @@ sys_wait(void)
 }
 
 int
+sys_waitPID(void)
+{
+  return 0;
+}
+
+int
 sys_kill(void)
 {
   int pid;
