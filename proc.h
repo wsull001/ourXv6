@@ -53,6 +53,8 @@ struct proc {
   uint sz;  // Size of process memory (bytes)
   int status;
   int priority;
+  int turnTicks;               //Turnaround ticks
+  int waitTicks;               //Wait time ticks
   pde_t* pgdir;                // Page table
   char *kstack;                // Bottom of kernel stack for this process
   enum procstate state;        // Process state

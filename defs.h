@@ -118,6 +118,7 @@ int             waitPID(int PID, int* status);
 void            wakeup(void*);
 void            yield(void);
 int             setPriority(int);
+void            procTick();
 
 // swtch.S
 void            swtch(struct context**, struct context*);

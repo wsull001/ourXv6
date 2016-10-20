@@ -49,6 +49,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->waitTicks = 0;
+  p->turnTicks = 0;
 
   release(&ptable.lock);
 
@@ -220,6 +222,7 @@ void exit(int status)
 
   // Jump into the scheduler, never to return.
   proc->state = ZOMBIE;
+  cprintf("PID: %d turnaround ticks: %d waittime ticks: %d\n", proc->pid, proc->turnTicks, proc->waitTicks);
   sched();
   panic("zombie exit");
 }
@@ -550,3 +553,20 @@ int setPriority(int prior) {
   yield();
   return 0;
 }
+
+void procTick() {
+  struct proc* p;
+
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if (p->state == RUNNING || p->state == RUNNABLE || p->state == SLEEPING)
+    {
+      p->turnTicks++;
+    }
+    if (p->state == RUNNABLE) p->waitTicks++;
+  }
+  release(&ptable.lock);
+}
+
+
+
