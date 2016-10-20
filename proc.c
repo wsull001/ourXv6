@@ -323,30 +323,46 @@ void
 scheduler(void)
 {
   struct proc *p;
+  struct proc *lp = 0; //last process run
+
 
   for(;;){
     // Enable interrupts on this processor.
     sti();
 
     // Loop over process table looking for process to run.
+    struct proc *h = ptable.proc; //highest priority process
+    char rr = 0; //round robbin
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
-
+      if(p->state == RUNNABLE) {
+        if (p->priority > h->priority) {
+          h = p;
+        }
+        if (lp != 0) {
+          if (p > lp && p->priority >= h->priority && rr == 0) {
+            h = p;
+            rr = 1;
+          }
+        }
+      }
+    }
+      p = h;
+      lp = p;
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
-      proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-      swtch(&cpu->scheduler, p->context);
-      switchkvm();
+      if (p->state == RUNNABLE) {
+        proc = p;
+        switchuvm(p);
+        p->state = RUNNING;
+        swtch(&cpu->scheduler, p->context);
+        switchkvm();
+      }
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    proc = 0;
 
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      proc = 0;
-    }
     release(&ptable.lock);
 
   }
