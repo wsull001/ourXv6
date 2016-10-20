@@ -35,7 +35,11 @@ sys_wait(void)
 int
 sys_waitPID(void)
 {
-  return 0;
+  int* stat;
+  int id;
+  if(argint(0, &id) < 0) return -1;
+  if(argint(1, (int*) &stat) < 0) return -1;
+  return waitPID(id, stat);
 }
 
 int

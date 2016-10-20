@@ -114,6 +114,7 @@ void            sched(void);
 void            sleep(void*, struct spinlock*);
 void            userinit(void);
 int             wait(int *status);
+int             waitPID(int PID, int* status);
 void            wakeup(void*);
 void            yield(void);
 
