@@ -338,6 +338,7 @@ scheduler(void)
       if(p->state == RUNNABLE) {
         if (p->priority > h->priority) {
           h = p;
+          cprintf("holla %d\n", h->priority);
         }
         if (lp != 0) {
           if (p > lp && p->priority >= h->priority && rr == 0) {
@@ -541,4 +542,11 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int setPriority(int prior) {
+  if (prior < 0 || prior > 63) return -1; //priority must be between 0 and
+  proc->priority = prior;
+  yield();
+  return 0;
 }

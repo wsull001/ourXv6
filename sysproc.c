@@ -72,6 +72,13 @@ sys_sbrk(void)
   return addr;
 }
 
+int sys_setPriority(void) {
+  int prior;
+  if (argint(0, &prior) < 0)
+    return -1;
+  return setPriority(prior);
+}
+
 int
 sys_sleep(void)
 {
