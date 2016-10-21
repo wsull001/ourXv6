@@ -53,6 +53,7 @@ struct proc {
   uint sz;  // Size of process memory (bytes)
   int status;
   int priority;
+  int oldPriority;             //for inheritance and donation
   int turnTicks;               //Turnaround ticks
   int waitTicks;               //Wait time ticks
   pde_t* pgdir;                // Page table

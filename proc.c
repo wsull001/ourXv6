@@ -236,12 +236,31 @@ wait(int* status)
   int havekids, pid;
 
   acquire(&ptable.lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+    if (p->parent == proc) {
+      if (p->priority < proc->priority) {
+        p->oldPriority = p->priority;
+        p->priority = proc->priority;
+      }
+      else {
+        p->oldPriority = -1; //didn't inherit priority (yet)
+      }
+    }
+  } //for priority donation to children, remove when first child exits
   for(;;){
     // Scan through table looking for exited children.
     havekids = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->parent != proc)
         continue;
+      if (p->priority < proc->priority) {
+        p->oldPriority = p->priority;
+        p->priority = proc->priority;
+      }
+      else {
+        p->oldPriority = -1;
+      }//more priority donation code
+
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
@@ -255,6 +274,14 @@ wait(int* status)
         p->name[0] = 0;
         p->killed = 0;
         p->state = UNUSED;
+        //undo donation
+        for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
+          if (p->parent != proc)
+            continue;
+          if (p->oldPriority != -1)
+            p->priority = p->oldPriority; //undoes any donations
+          p->oldPriority = 0; //just un-initialize, not needed
+        }
         release(&ptable.lock);
         return pid;
       }
@@ -284,6 +311,8 @@ waitPID(int PID, int* status) {
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->pid != PID)
         continue;
+      if (p->priority < proc->priority)
+        p->priority = proc->priority; //priority inheritance
       havekids = 1;
       if(p->state == ZOMBIE){
         // Found one.
@@ -341,7 +370,6 @@ scheduler(void)
       if(p->state == RUNNABLE) {
         if (p->priority > h->priority) {
           h = p;
-          cprintf("holla %d\n", h->priority);
         }
         if (lp != 0) {
           if (p > lp && p->priority >= h->priority && rr == 0) {

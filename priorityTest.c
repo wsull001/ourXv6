@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     printf(1, "Parent: %d bottles of beer on the wall\n", executions);
     executions--;
   }
-  waitpid(p1, 0);
+  waitpid(p1, 0, 0);
   wait(0);
   exit(0);
 }

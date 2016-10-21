@@ -21,15 +21,15 @@ int main(int argc, char** argv) {
   }
   printf(1, "Wait for process three, identified by return of 5:\n");
   int status; //to keep track of each process's return status and print
-  waitpid(p3, &status);
+  waitpid(p3, &status, 0);
   printf(1, "exit status: %d\n", status);
   printf(1, "\nWait for process two, identified by return of 4:\n");
-  waitpid(p2, &status);
+  waitpid(p2, &status, 0);
   printf(1, "exit status: %d\n", status);
-  int t = waitpid(p2, &status);
+  int t = waitpid(p2, &status, 0);
   printf(1, "Should return -1 because p2 has already been collected: %d\n", t);
   printf(1, "\nWait for process one, identified by return of 3:\n");
-  waitpid(p1, &status);
+  waitpid(p1, &status, 0);
   printf(1, "exit status: %d\n", status);
   exit(0);
 
