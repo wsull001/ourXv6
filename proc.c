@@ -597,4 +597,16 @@ void procTick() {
 }
 
 
+int v2p(int va, int* pa) {
+  pde_t *pde = proc->pgdir;
+  pte_t *pgtab;
 
+  if (*pde & PTE_P) {
+    pgtab = (pte_t*)P2V(PTE_ADDR(*pde));
+  } else return -1;
+  pte_t pte = pgtab[PTX(va)];
+  int pa2 = (int)pte & 0xFFFFF000;
+  int offset = va & 0xFFF;
+  *pa = pa2 | offset;
+  return 0;
+}

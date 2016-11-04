@@ -22,3 +22,4 @@
 #define SYS_close  21
 #define SYS_waitpid 22
 #define SYS_setPriority 23
+#define SYS_v2p 24

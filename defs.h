@@ -119,6 +119,7 @@ void            wakeup(void*);
 void            yield(void);
 int             setPriority(int);
 void            procTick();
+int             v2p(int, int*);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

@@ -112,3 +112,13 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_v2p(void) {
+  int* phys;
+  int va;
+  if (argint(0, &va) < 0) return -1;
+  if (argint(1, (int*)&phys) < 0) return -1;
+  return v2p(va, phys);
+}
+
