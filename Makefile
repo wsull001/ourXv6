@@ -177,6 +177,7 @@ UPROGS=\
 	_waitPIDTest\
 	_priorityTest\
 	_priorInherTest\
+	_v2p\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -245,7 +246,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
-	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c waittest.c waitPIDTest.c priorityTest.c priorInherTest.c\
+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c waittest.c waitPIDTest.c priorityTest.c priorInherTest.c v2p.c\
 	printf.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
